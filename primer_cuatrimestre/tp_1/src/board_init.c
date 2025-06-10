@@ -4,6 +4,6 @@
 void board_init(void) {
     
     //Inicializacion de gic y timer
-    gic_init();
-    timer_init();
+    __gic_init();
+    __timer_init();
 }
