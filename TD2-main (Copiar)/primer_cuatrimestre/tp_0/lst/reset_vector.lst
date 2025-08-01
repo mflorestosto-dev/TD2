@@ -1,0 +1,24 @@
+ARM GAS  src/reset_vector.s 			page 1
+
+
+   1              	/*
+   2              	Este archivo define el vector de reset, es decir, la dirección 
+   3              	donde comienza la ejecución cuando el procesador arranca o se reinicia.
+   4              	 */
+   5              	
+   6              	.global  _reset_vector 
+   7              	.extern  _start
+   8              	.code 	 32
+   9              	.section .reset//Secciones de entrada
+  10              	_reset_vector:
+  11 0000 FEFFFFEA 		B _start
+  12              	.end
+ARM GAS  src/reset_vector.s 			page 2
+
+
+DEFINED SYMBOLS
+  src/reset_vector.s:10     .reset:00000000 _reset_vector
+  src/reset_vector.s:11     .reset:00000000 $a
+
+UNDEFINED SYMBOLS
+_start

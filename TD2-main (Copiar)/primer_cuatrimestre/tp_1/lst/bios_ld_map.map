@@ -1,0 +1,217 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+public_ram       0x70010000         0x00001000
+public_stack     0x70020000         0x00002000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x70010000                        _PUBLIC_RAM_INIT = 0x70010000
+                0x70020000                        _PUBLIC_STACK_INIT = 0x70020000
+                0x00000100                        _STACK_SIZE = 0x100
+                0x70010000                        . = _PUBLIC_RAM_INIT
+
+.text           0x70010000       0x64
+ *(.reset*)
+ .reset         0x70010000        0x8 obj/reset_vector.o
+                0x70010000                _reset_vector
+ *(.start*)
+ *(.handlers*)
+ .handlers      0x70010008       0x44 obj/handlers.o
+                0x70010008                handler_UND
+                0x7001000c                handler_SWI
+                0x70010010                handler_prefetch_abort
+                0x70010014                handler_data_abort
+                0x70010018                handler_reserved
+                0x7001001c                handler_IRQ
+                0x70010048                handler_FIQ
+ .text          0x7001004c       0x18 obj/board_init.o
+                0x7001004c                board_init
+ .text          0x70010064        0x0 obj/gic.o
+ .text          0x70010064        0x0 obj/handlers.o
+ .text          0x70010064        0x0 obj/kernel_handler_irq.o
+ .text          0x70010064        0x0 obj/reset_vector.o
+ .text          0x70010064        0x0 obj/startup.o
+ .text          0x70010064        0x0 obj/timer.o
+
+.glue_7         0x70010064        0x0
+ .glue_7        0x70010064        0x0 linker stubs
+
+.glue_7t        0x70010064        0x0
+ .glue_7t       0x70010064        0x0 linker stubs
+
+.vfp11_veneer   0x70010064        0x0
+ .vfp11_veneer  0x70010064        0x0 linker stubs
+
+.v4_bx          0x70010064        0x0
+ .v4_bx         0x70010064        0x0 linker stubs
+
+.iplt           0x70010064        0x0
+ .iplt          0x70010064        0x0 obj/board_init.o
+
+.kernel_text    0x70010064       0xf8
+ .kernel_text   0x70010064       0x7c obj/gic.o
+                0x70010064                __gic_init
+ .kernel_text   0x700100e0       0x7c obj/timer.o
+                0x700100e0                __timer_init
+
+.handler        0x7001015c       0x8c
+ .handler       0x7001015c       0x8c obj/kernel_handler_irq.o
+                0x7001015c                kernel_handler_irq
+
+.rel.dyn        0x700101e8        0x0
+ .rel.iplt      0x700101e8        0x0 obj/board_init.o
+
+.data           0x700101e8        0x0
+ *(.data*)
+ .data          0x700101e8        0x0 obj/board_init.o
+ .data          0x700101e8        0x0 obj/gic.o
+ .data          0x700101e8        0x0 obj/handlers.o
+ .data          0x700101e8        0x0 obj/kernel_handler_irq.o
+ .data          0x700101e8        0x0 obj/reset_vector.o
+ .data          0x700101e8        0x0 obj/startup.o
+ .data          0x700101e8        0x0 obj/timer.o
+
+.igot.plt       0x700101e8        0x0
+ .igot.plt      0x700101e8        0x0 obj/board_init.o
+
+.bss            0x700101e8        0x0
+                0x700101e8                        . = ALIGN (0x4)
+                0x700101e8                        __bss_start__ = .
+ *(.bss*)
+ .bss           0x700101e8        0x0 obj/board_init.o
+ .bss           0x700101e8        0x0 obj/gic.o
+ .bss           0x700101e8        0x0 obj/handlers.o
+ .bss           0x700101e8        0x0 obj/kernel_handler_irq.o
+ .bss           0x700101e8        0x0 obj/reset_vector.o
+ .bss           0x700101e8        0x0 obj/startup.o
+ .bss           0x700101e8        0x0 obj/timer.o
+                0x700101e8                        __bss_end__ = .
+                0x70020000                        . = _PUBLIC_STACK_INIT
+
+.stack          0x70020000      0x600
+                0x70020000                        __system_stack_start__ = .
+                0x70020100                        . = (. + _STACK_SIZE)
+ *fill*         0x70020000      0x100 
+                0x70020100                        . = ALIGN (0x4)
+                0x70020100                        __stack_top_sys__ = .
+                0x70020200                        . = (. + _STACK_SIZE)
+ *fill*         0x70020100      0x100 
+                0x70020200                        . = ALIGN (0x4)
+                0x70020200                        __stack_top_svc__ = .
+                0x70020300                        . = (. + _STACK_SIZE)
+ *fill*         0x70020200      0x100 
+                0x70020300                        . = ALIGN (0x4)
+                0x70020300                        __stack_top_irq__ = .
+                0x70020400                        . = (. + _STACK_SIZE)
+ *fill*         0x70020300      0x100 
+                0x70020400                        . = ALIGN (0x4)
+                0x70020400                        __stack_top_fiq__ = .
+                0x70020500                        . = (. + _STACK_SIZE)
+ *fill*         0x70020400      0x100 
+                0x70020500                        . = ALIGN (0x4)
+                0x70020500                        __stack_top_abt__ = .
+                0x70020600                        . = (. + _STACK_SIZE)
+ *fill*         0x70020500      0x100 
+                0x70020600                        . = ALIGN (0x4)
+                0x70020600                        __stack_top_und__ = .
+                0x70020600                        __system_stack_end__ = .
+LOAD obj/board_init.o
+LOAD obj/gic.o
+LOAD obj/handlers.o
+LOAD obj/kernel_handler_irq.o
+LOAD obj/reset_vector.o
+LOAD obj/startup.o
+LOAD obj/timer.o
+OUTPUT(obj/bios.elf elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000      0x853
+ .debug_info    0x00000000       0x8d obj/board_init.o
+ .debug_info    0x0000008d      0x2f1 obj/gic.o
+ .debug_info    0x0000037e       0x26 obj/handlers.o
+ .debug_info    0x000003a4      0x29b obj/kernel_handler_irq.o
+ .debug_info    0x0000063f      0x214 obj/timer.o
+
+.debug_abbrev   0x00000000      0x319
+ .debug_abbrev  0x00000000       0x57 obj/board_init.o
+ .debug_abbrev  0x00000057       0xef obj/gic.o
+ .debug_abbrev  0x00000146       0x14 obj/handlers.o
+ .debug_abbrev  0x0000015a       0xf5 obj/kernel_handler_irq.o
+ .debug_abbrev  0x0000024f       0xca obj/timer.o
+
+.debug_aranges  0x00000000       0xa0
+ .debug_aranges
+                0x00000000       0x20 obj/board_init.o
+ .debug_aranges
+                0x00000020       0x20 obj/gic.o
+ .debug_aranges
+                0x00000040       0x20 obj/handlers.o
+ .debug_aranges
+                0x00000060       0x20 obj/kernel_handler_irq.o
+ .debug_aranges
+                0x00000080       0x20 obj/timer.o
+
+.debug_rnglists
+                0x00000000       0x4d
+ .debug_rnglists
+                0x00000000       0x13 obj/board_init.o
+ .debug_rnglists
+                0x00000013       0x13 obj/gic.o
+ .debug_rnglists
+                0x00000026       0x14 obj/kernel_handler_irq.o
+ .debug_rnglists
+                0x0000003a       0x13 obj/timer.o
+
+.debug_line     0x00000000      0x2b4
+ .debug_line    0x00000000       0x66 obj/board_init.o
+ .debug_line    0x00000066       0x9b obj/gic.o
+ .debug_line    0x00000101       0x4b obj/handlers.o
+ .debug_line    0x0000014c       0xc5 obj/kernel_handler_irq.o
+ .debug_line    0x00000211       0xa3 obj/timer.o
+
+.debug_str      0x00000000      0x36c
+ .debug_str     0x00000000      0x36c obj/board_init.o
+                                0x169 (size before relaxing)
+ .debug_str     0x0000036c      0x23f obj/gic.o
+ .debug_str     0x0000036c       0x5c obj/handlers.o
+ .debug_str     0x0000036c      0x286 obj/kernel_handler_irq.o
+ .debug_str     0x0000036c      0x252 obj/timer.o
+
+.comment        0x00000000       0x26
+ .comment       0x00000000       0x26 obj/board_init.o
+                                 0x27 (size before relaxing)
+ .comment       0x00000026       0x27 obj/gic.o
+ .comment       0x00000026       0x27 obj/kernel_handler_irq.o
+ .comment       0x00000026       0x27 obj/timer.o
+
+.ARM.attributes
+                0x00000000       0x35
+ .ARM.attributes
+                0x00000000       0x37 obj/board_init.o
+ .ARM.attributes
+                0x00000037       0x37 obj/gic.o
+ .ARM.attributes
+                0x0000006e       0x12 obj/handlers.o
+ .ARM.attributes
+                0x00000080       0x37 obj/kernel_handler_irq.o
+ .ARM.attributes
+                0x000000b7       0x12 obj/reset_vector.o
+ .ARM.attributes
+                0x000000c9       0x14 obj/startup.o
+ .ARM.attributes
+                0x000000dd       0x37 obj/timer.o
+
+.init:          0x00000000       0xc8
+ .init:         0x00000000       0xc8 obj/startup.o
+                0x00000040                _start
+
+.debug_frame    0x00000000       0xbc
+ .debug_frame   0x00000000       0x2c obj/board_init.o
+ .debug_frame   0x0000002c       0x30 obj/gic.o
+ .debug_frame   0x0000005c       0x30 obj/kernel_handler_irq.o
+ .debug_frame   0x0000008c       0x30 obj/timer.o

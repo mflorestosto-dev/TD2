@@ -1,0 +1,92 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+public_ram       0x70010000         0x00001000
+public_stack     0x70020000         0x00001000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x70010000                        _PUBLIC_RAM_INIT = 0x70010000
+                0x70020000                        _PUBLIC_STACK_INIT = 0x70020000
+                0x70010000                        . = _PUBLIC_RAM_INIT
+
+.text           0x70010000       0x88
+ *(.reset*)
+ .reset         0x70010000        0x4 obj/reset_vector.o
+                0x70010000                _reset_vector
+ *(.start*)
+ .start:        0x70010004       0x68 obj/startup.o
+                0x70010044                _start
+ *(.handlers*)
+ .handlers      0x7001006c       0x1c obj/handlers.o
+                0x7001006c                undef_handler
+                0x70010070                swi_handler
+                0x70010074                prefetch_abort
+                0x70010078                data_abort
+                0x7001007c                reserved_handler
+                0x70010080                irq_handler
+                0x70010084                fiq_handler
+ .text          0x70010088        0x0 obj/handlers.o
+ .text          0x70010088        0x0 obj/reset_vector.o
+ .text          0x70010088        0x0 obj/startup.o
+
+.glue_7         0x70010088        0x0
+ .glue_7        0x70010088        0x0 linker stubs
+
+.glue_7t        0x70010088        0x0
+ .glue_7t       0x70010088        0x0 linker stubs
+
+.vfp11_veneer   0x70010088        0x0
+ .vfp11_veneer  0x70010088        0x0 linker stubs
+
+.v4_bx          0x70010088        0x0
+ .v4_bx         0x70010088        0x0 linker stubs
+
+.data           0x70010088        0x0
+ *(.data*)
+ .data          0x70010088        0x0 obj/handlers.o
+ .data          0x70010088        0x0 obj/reset_vector.o
+ .data          0x70010088        0x0 obj/startup.o
+
+.bss            0x70010088        0x0
+                0x70010088                        . = ALIGN (0x4)
+                0x70010088                        __bss_start__ = .
+ *(.bss*)
+ .bss           0x70010088        0x0 obj/handlers.o
+ .bss           0x70010088        0x0 obj/reset_vector.o
+ .bss           0x70010088        0x0 obj/startup.o
+                0x70010088                        __bss_end__ = .
+LOAD obj/handlers.o
+LOAD obj/reset_vector.o
+LOAD obj/startup.o
+OUTPUT(obj/bios.elf elf32-littlearm)
+LOAD linker stubs
+
+.ARM.attributes
+                0x00000000       0x12
+ .ARM.attributes
+                0x00000000       0x12 obj/handlers.o
+ .ARM.attributes
+                0x00000012       0x12 obj/reset_vector.o
+ .ARM.attributes
+                0x00000024       0x12 obj/startup.o
+
+.debug_line     0x00000000       0x41
+ .debug_line    0x00000000       0x41 obj/handlers.o
+
+.debug_info     0x00000000       0x26
+ .debug_info    0x00000000       0x26 obj/handlers.o
+
+.debug_abbrev   0x00000000       0x14
+ .debug_abbrev  0x00000000       0x14 obj/handlers.o
+
+.debug_aranges  0x00000000       0x20
+ .debug_aranges
+                0x00000000       0x20 obj/handlers.o
+
+.debug_str      0x00000000       0x5c
+ .debug_str     0x00000000       0x5c obj/handlers.o

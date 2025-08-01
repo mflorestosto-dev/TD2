@@ -1,0 +1,189 @@
+ARM GAS  src/startup.s 			page 1
+
+
+   1              	/*
+   2              	_table_isr:
+   3              	Contiene los punteros a los handlers. Cada vector de excepción carga la dirección de su handler c
+   4              	
+   5              	copy_loop:
+   6              	Copia la tabla de vectores a la posición 0 (donde el procesador espera que estén los vectores). 
+   7              	
+   8              	idle:
+   9              	Un bucle infinito para “esperar” o “dormir”.
+  10              	 */
+  11              	
+  12              	.global _start
+  13              	
+  14              	//Handlers
+  15              	.extern	_reset_vector
+  16              	.extern handler_UND
+  17              	.extern handler_SWI
+  18              	.extern handler_prefetch_abort
+  19              	.extern handler_data_abort
+  20              	.extern handler_reserved
+  21              	.extern handler_IRQ
+  22              	.extern handler_FIQ
+  23              	
+  24              	//Stack pointers de los modos
+  25              	.extern __stack_top_sys__ 
+  26              	.extern __stack_top_svc__ 
+  27              	.extern __stack_top_irq__
+  28              	.extern __stack_top_fiq__
+  29              	.extern __stack_top_abt__
+  30              	.extern __stack_top_und__
+  31              	
+  32              	.extern board_init
+  33              	
+  34              	.code 32
+  35              	
+  36              	.section .init:
+  37              	
+  38              	_table_isr:
+  39 0000 18F09FE5 		LDR PC, literal_reset_vector
+  40 0004 18F09FE5 	    LDR PC, literal_undef_handler      // Undefined instruction
+  41 0008 18F09FE5 	    LDR PC, literal_swi_handler        // Software interrupt
+  42 000c 18F09FE5 	    LDR PC, literal_prefetch_abort     // Prefetch abort
+  43 0010 18F09FE5 	    LDR PC, literal_data_abort         // Data abort
+  44 0014 18F09FE5 	    LDR PC, literal_reserved_handler   // Reserved
+  45 0018 18F09FE5 	    LDR PC, literal_irq_handler        // IRQ
+  46 001c 18F09FE5 	    LDR PC, literal_fiq_handler        // FIQ
+  47              	
+  48              	
+  49 0020 00000000 	    literal_reset_vector 		: .word _reset_vector
+  50 0024 00000000 	    literal_undef_handler 		: .word handler_UND
+  51 0028 00000000 	    literal_swi_handler 		: .word handler_SWI
+  52 002c 00000000 	    literal_prefetch_abort 		: .word handler_prefetch_abort
+  53 0030 00000000 	    literal_data_abort 			: .word handler_data_abort
+  54 0034 00000000 	    literal_reserved_handler 	: .word handler_reserved
+  55 0038 00000000 	    literal_irq_handler 		: .word handler_IRQ
+  56 003c 00000000 	    literal_fiq_handler 		: .word handler_FIQ
+  57              	
+ARM GAS  src/startup.s 			page 2
+
+
+  58              	
+  59              	_start:
+  60 0040 FFFFFFEA 	    b copy_loop
+  61              	
+  62              	copy_loop:
+  63 0044 0000A0E3 	    LDR r0, = #0                    // Dirección destino (inicio de vectores)
+  64 0048 58109FE5 	    LDR r1, = _table_isr            // Origen
+  65 004c 58209FE5 	    LDR r2, = _start                // Fin de la tabla
+  66              	
+  67              	copy_loop_body:
+  68 0050 043091E4 	    LDR r3, [r1], #4
+  69 0054 043080E4 	    STR r3, [r0], #4
+  70 0058 020051E1 		CMP r1, r2
+  71 005c FBFFFF1A 	    BNE copy_loop_body
+  72              	
+  73              	    //Constantes para los modos de operacion
+  74              	    .equ USR_MODE,  0x10 /*User         - CPSR[4:0] = 10000*/
+  75              	    .equ FIQ_MODE,  0x11 /*FIQ          - CPSR[4:0] = 10001*/
+  76              	    .equ IRQ_MODE,  0x12 /*IRQ          - CPSR[4:0] = 10010*/
+  77              	    .equ SVC_MODE,  0x13 /*Supervisor   - CPSR[4:0] = 10011*/
+  78              	    .equ ABT_MODE,  0x17 /*Abort        - CPSR[4:0] = 10111*/
+  79              	    .equ UND_MODE,  0x1B /*Undefined    - CPSR[4:0] = 11011*/
+  80              	    .equ SYS_MODE,  0x1F /*System       - CPSR[4:0] = 11111*/
+  81              	
+  82              	    .equ MASK,      0xC0 /*Mascara para poner en 1 el bit de la interrupcion a deshabilitar */
+  83              	
+  84              	stack_init:
+  85              	    // Modo FIQ
+  86 0060 D1F021E3 	    MSR cpsr_c, #(FIQ_MODE | MASK)  // Modo FIQ, deshabilitar IRQ/FIQ
+  87 0064 44D09FE5 	    LDR SP, = __stack_top_fiq__
+  88              	
+  89              	    // Modo IRQ
+  90 0068 D2F021E3 	    MSR cpsr_c, #(IRQ_MODE | MASK)  // Modo IRQ, deshabilitar IRQ/FIQ
+  91 006c 40D09FE5 	    LDR SP, = __stack_top_irq__
+  92              	
+  93              	    // Modo Supervisor
+  94 0070 D3F021E3 	    MSR cpsr_c, #(SVC_MODE | MASK)  // Modo SVC, deshabilitar IRQ/FIQ
+  95 0074 3CD09FE5 	    LDR SP, = __stack_top_svc__
+  96              	
+  97              	    // Modo Abort
+  98 0078 D7F021E3 	    MSR cpsr_c, #(ABT_MODE | MASK)  // Modo Abort, deshabilitar IRQ/FIQ
+  99 007c 38D09FE5 	    LDR SP, = __stack_top_abt__
+ 100              	
+ 101              	    // Modo Undefined
+ 102 0080 DBF021E3 	    MSR cpsr_c, #(UND_MODE | MASK)  // Modo Undefined, deshabilitar IRQ/FIQ
+ 103 0084 34D09FE5 	    LDR SP, = __stack_top_und__
+ 104              	
+ 105              	    // Modo System (generalmente se usa como User con privilegios)
+ 106 0088 DFF021E3 	    MSR cpsr_c, #(SYS_MODE | MASK)  // Modo System, deshabilitar IRQ/FIQ
+ 107 008c 30D09FE5 	    LDR SP, = __stack_top_sys__
+ 108              	
+ 109              	
+ 110              	// --------------------------------------------------------
+ 111              	// Llamar a la inicialización del sistema en C (board_init)
+ 112              	// --------------------------------------------------------
+ 113              	board_init:
+ 114 0090 FEFFFFEB 	    BL board_init               // Llamada a la rutina en C
+ARM GAS  src/startup.s 			page 3
+
+
+ 115              	
+ 116              	// --------------------------------------------------------
+ 117              	// Habilitar interrupciones (IRQ) globalmente
+ 118              	// --------------------------------------------------------
+ 119              	irq_enable:
+ 120 0094 00000FE1 	    MRS r0, cpsr
+ 121 0098 8000C0E3 	    BIC r0, r0, #0x80           // Limpiamos bit I (habilitamos IRQ)
+ 122 009c 00F021E1 	    MSR cpsr_c, r0
+ 123              	
+ 124              	idle:
+ 125 00a0 03F020E3 	    WFI
+ 126 00a4 FDFFFFEA 	    B idle
+ 127              	
+ 128 00a8 00000000 	.end
+ 128      00000000 
+ 128      00000000 
+ 128      00000000 
+ 128      00000000 
+ARM GAS  src/startup.s 			page 4
+
+
+DEFINED SYMBOLS
+       src/startup.s:59     .init::00000040 _start
+       src/startup.s:38     .init::00000000 _table_isr
+       src/startup.s:49     .init::00000020 literal_reset_vector
+       src/startup.s:39     .init::00000000 $a
+       src/startup.s:50     .init::00000024 literal_undef_handler
+       src/startup.s:51     .init::00000028 literal_swi_handler
+       src/startup.s:52     .init::0000002c literal_prefetch_abort
+       src/startup.s:53     .init::00000030 literal_data_abort
+       src/startup.s:54     .init::00000034 literal_reserved_handler
+       src/startup.s:55     .init::00000038 literal_irq_handler
+       src/startup.s:56     .init::0000003c literal_fiq_handler
+       src/startup.s:49     .init::00000020 $d
+       src/startup.s:62     .init::00000044 copy_loop
+       src/startup.s:60     .init::00000040 $a
+       src/startup.s:67     .init::00000050 copy_loop_body
+       src/startup.s:74     *ABS*:00000010 USR_MODE
+       src/startup.s:75     *ABS*:00000011 FIQ_MODE
+       src/startup.s:76     *ABS*:00000012 IRQ_MODE
+       src/startup.s:77     *ABS*:00000013 SVC_MODE
+       src/startup.s:78     *ABS*:00000017 ABT_MODE
+       src/startup.s:79     *ABS*:0000001b UND_MODE
+       src/startup.s:80     *ABS*:0000001f SYS_MODE
+       src/startup.s:82     *ABS*:000000c0 MASK
+       src/startup.s:84     .init::00000060 stack_init
+       src/startup.s:113    .init::00000090 board_init
+       src/startup.s:119    .init::00000094 irq_enable
+       src/startup.s:124    .init::000000a0 idle
+       src/startup.s:128    .init::000000a8 $d
+
+UNDEFINED SYMBOLS
+_reset_vector
+handler_UND
+handler_SWI
+handler_prefetch_abort
+handler_data_abort
+handler_reserved
+handler_IRQ
+handler_FIQ
+__stack_top_fiq__
+__stack_top_irq__
+__stack_top_svc__
+__stack_top_abt__
+__stack_top_und__
+__stack_top_sys__

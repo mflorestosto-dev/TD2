@@ -1,0 +1,55 @@
+ARM GAS  src/handlers.s 			page 1
+
+
+   1              	/*
+   2              	Este archivo define los manejadores de excepciones (handlers). 
+   3              	Cada sección (b .) significa que cuando ocurre esa excepción, el procesador 
+   4              	se queda en un bucle infinito (esperando que el usuario lo depure).
+   5              	 */
+   6              	
+   7              	
+   8              	.global undef_handler
+   9              	.global swi_handler
+  10              	.global prefetch_abort
+  11              	.global data_abort
+  12              	.global reserved_handler
+  13              	.global irq_handler
+  14              	.global fiq_handler
+  15              	
+  16              	.section .handlers, "ax"
+  17              	
+  18              	undef_handler:       
+  19 0000 FEFFFFEA 	    b . 
+  20              	
+  21              	swi_handler:         
+  22 0004 FEFFFFEA 	    b .
+  23              	
+  24              	prefetch_abort:      
+  25 0008 FEFFFFEA 	    b .
+  26              	
+  27              	data_abort:          
+  28 000c FEFFFFEA 	    b .
+  29              	
+  30              	reserved_handler:    
+  31 0010 FEFFFFEA 	    b .
+  32              	
+  33              	irq_handler:         
+  34              	    @MOV R0, #0x04
+  35 0014 FEFFFFEA 	    b .
+  36              	
+  37              	fiq_handler:         
+  38 0018 FEFFFFEA 	    b ....
+ARM GAS  src/handlers.s 			page 2
+
+
+DEFINED SYMBOLS
+      src/handlers.s:18     .handlers:00000000 undef_handler
+      src/handlers.s:21     .handlers:00000004 swi_handler
+      src/handlers.s:24     .handlers:00000008 prefetch_abort
+      src/handlers.s:27     .handlers:0000000c data_abort
+      src/handlers.s:30     .handlers:00000010 reserved_handler
+      src/handlers.s:33     .handlers:00000014 irq_handler
+      src/handlers.s:37     .handlers:00000018 fiq_handler
+      src/handlers.s:19     .handlers:00000000 $a
+
+NO UNDEFINED SYMBOLS
