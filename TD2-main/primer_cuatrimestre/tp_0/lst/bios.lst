@@ -1,0 +1,173 @@
+
+obj/bios.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+70010000 <_reset_vector>:
+70010000:	ea00000f 	b	70010044 <_start>
+
+70010004 <_table_isr>:
+70010004:	e59ff018 	ldr	pc, [pc, #24]	@ 70010024 <literal_reset_vector>
+70010008:	e59ff018 	ldr	pc, [pc, #24]	@ 70010028 <literal_undef_handler>
+7001000c:	e59ff018 	ldr	pc, [pc, #24]	@ 7001002c <literal_swi_handler>
+70010010:	e59ff018 	ldr	pc, [pc, #24]	@ 70010030 <literal_prefetch_abort>
+70010014:	e59ff018 	ldr	pc, [pc, #24]	@ 70010034 <literal_data_abort>
+70010018:	e59ff018 	ldr	pc, [pc, #24]	@ 70010038 <literal_reserved_handler>
+7001001c:	e59ff018 	ldr	pc, [pc, #24]	@ 7001003c <literal_irq_handler>
+70010020:	e59ff018 	ldr	pc, [pc, #24]	@ 70010040 <literal_fiq_handler>
+
+70010024 <literal_reset_vector>:
+70010024:	70010000 	andvc	r0, r1, r0
+
+70010028 <literal_undef_handler>:
+70010028:	7001006c 	andvc	r0, r1, ip, rrx
+
+7001002c <literal_swi_handler>:
+7001002c:	70010070 	andvc	r0, r1, r0, ror r0
+
+70010030 <literal_prefetch_abort>:
+70010030:	70010074 	andvc	r0, r1, r4, ror r0
+
+70010034 <literal_data_abort>:
+70010034:	70010078 	andvc	r0, r1, r8, ror r0
+
+70010038 <literal_reserved_handler>:
+70010038:	7001007c 	andvc	r0, r1, ip, ror r0
+
+7001003c <literal_irq_handler>:
+7001003c:	70010080 	andvc	r0, r1, r0, lsl #1
+
+70010040 <literal_fiq_handler>:
+70010040:	70010084 	andvc	r0, r1, r4, lsl #1
+
+70010044 <_start>:
+70010044:	e3a00000 	mov	r0, #0
+70010048:	e59f1014 	ldr	r1, [pc, #20]	@ 70010064 <idle+0x4>
+7001004c:	e59f2014 	ldr	r2, [pc, #20]	@ 70010068 <idle+0x8>
+
+70010050 <copy_loop>:
+70010050:	e4913004 	ldr	r3, [r1], #4
+70010054:	e4803004 	str	r3, [r0], #4
+70010058:	e1510002 	cmp	r1, r2
+7001005c:	1afffffb 	bne	70010050 <copy_loop>
+
+70010060 <idle>:
+70010060:	ea000006 	b	70010080 <irq_handler>
+70010064:	70010004 	andvc	r0, r1, r4
+70010068:	70010044 	andvc	r0, r1, r4, asr #32
+
+7001006c <undef_handler>:
+7001006c:	eafffffe 	b	7001006c <undef_handler>
+
+70010070 <swi_handler>:
+70010070:	eafffffe 	b	70010070 <swi_handler>
+
+70010074 <prefetch_abort>:
+70010074:	eafffffe 	b	70010074 <prefetch_abort>
+
+70010078 <data_abort>:
+70010078:	eafffffe 	b	70010078 <data_abort>
+
+7001007c <reserved_handler>:
+7001007c:	eafffffe 	b	7001007c <reserved_handler>
+
+70010080 <irq_handler>:
+70010080:	eafffffe 	b	70010080 <irq_handler>
+
+70010084 <fiq_handler>:
+70010084:	eafffffe 	b	70010084 <fiq_handler>
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00001141 	andeq	r1, r0, r1, asr #2
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	00000007 	andeq	r0, r0, r7
+  10:	Address 0x10 is out of bounds.
+
+
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+   0:	0000003d 	andeq	r0, r0, sp, lsr r0
+   4:	00220002 	eoreq	r0, r2, r2
+   8:	01020000 	mrseq	r0, (UNDEF: 2)
+   c:	000a0efb 	strdeq	r0, [sl], -fp
+  10:	01010101 	tsteq	r1, r1, lsl #2
+  14:	01000000 	mrseq	r0, (UNDEF: 0)
+  18:	00637273 	rsbeq	r7, r3, r3, ror r2
+  1c:	6e616800 	cdpvs	8, 6, cr6, cr1, cr0, {0}
+  20:	72656c64 	rsbvc	r6, r5, #100, 24	@ 0x6400
+  24:	00732e73 	rsbseq	r2, r3, r3, ror lr
+  28:	00000001 	andeq	r0, r0, r1
+  2c:	6c020500 	cfstr32vs	mvfx0, [r2], {-0}
+  30:	03700100 	cmneq	r0, #0, 2
+  34:	2e2e0112 	mcrcs	1, 1, r0, cr14, cr2, {0}
+  38:	2e2f2e2e 	cdpcs	14, 2, cr2, cr15, cr14, {1}
+  3c:	01000202 	tsteq	r0, r2, lsl #4
+  40:	Address 0x40 is out of bounds.
+
+
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+   0:	00000022 	andeq	r0, r0, r2, lsr #32
+   4:	00000002 	andeq	r0, r0, r2
+   8:	01040000 	mrseq	r0, (UNDEF: 4)
+   c:	00000000 	andeq	r0, r0, r0
+  10:	7001006c 	andvc	r0, r1, ip, rrx
+  14:	70010088 	andvc	r0, r1, r8, lsl #1
+  18:	00000000 	andeq	r0, r0, r0
+  1c:	0000000f 	andeq	r0, r0, pc
+  20:	00000050 	andeq	r0, r0, r0, asr r0
+  24:	Address 0x24 is out of bounds.
+
+
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+   0:	10001101 	andne	r1, r0, r1, lsl #2
+   4:	12011106 	andne	r1, r1, #-2147483647	@ 0x80000001
+   8:	1b0e0301 	blne	380c14 <_PUBLIC_RAM_INIT-0x6fc8f3ec>
+   c:	130e250e 	movwne	r2, #58638	@ 0xe50e
+  10:	00000005 	andeq	r0, r0, r5
+
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+   0:	0000001c 	andeq	r0, r0, ip, lsl r0
+   4:	00000002 	andeq	r0, r0, r2
+   8:	00040000 	andeq	r0, r4, r0
+   c:	00000000 	andeq	r0, r0, r0
+  10:	7001006c 	andvc	r0, r1, ip, rrx
+  14:	0000001c 	andeq	r0, r0, ip, lsl r0
+	...
+
+Disassembly of section .debug_str:
+
+00000000 <.debug_str>:
+   0:	2f637273 	svccs	0x00637273
+   4:	646e6168 	strbtvs	r6, [lr], #-360	@ 0xfffffe98
+   8:	7372656c 	cmnvc	r2, #108, 10	@ 0x1b000000
+   c:	2f00732e 	svccs	0x0000732e
+  10:	656d6f68 	strbvs	r6, [sp, #-3944]!	@ 0xfffff098
+  14:	74616d2f 	strbtvc	r6, [r1], #-3375	@ 0xfffff2d1
+  18:	2d736169 	ldfcse	f6, [r3, #-420]!	@ 0xfffffe5c
+  1c:	6e756275 	mrcvs	2, 3, r6, cr5, cr5, {3}
+  20:	452f7574 	strmi	r7, [pc, #-1396]!	@ fffffab4 <_PUBLIC_STACK_INIT+0x8ffdfab4>
+  24:	69726373 	ldmdbvs	r2!, {r0, r1, r4, r5, r6, r8, r9, sp, lr}^
+  28:	69726f74 	ldmdbvs	r2!, {r2, r4, r5, r6, r8, r9, sl, fp, sp, lr}^
+  2c:	44542f6f 	ldrbmi	r2, [r4], #-3951	@ 0xfffff091
+  30:	616d2d32 	cmnvs	sp, r2, lsr sp
+  34:	702f6e69 	eorvc	r6, pc, r9, ror #28
+  38:	656d6972 	strbvs	r6, [sp, #-2418]!	@ 0xfffff68e
+  3c:	75635f72 	strbvc	r5, [r3, #-3954]!	@ 0xfffff08e
+  40:	69727461 	ldmdbvs	r2!, {r0, r5, r6, sl, ip, sp, lr}^
+  44:	7473656d 	ldrbtvc	r6, [r3], #-1389	@ 0xfffffa93
+  48:	742f6572 	strtvc	r6, [pc], #-1394	@ 50 <_PUBLIC_RAM_INIT-0x7000ffb0>
+  4c:	00305f70 	eorseq	r5, r0, r0, ror pc
+  50:	20554e47 	subscs	r4, r5, r7, asr #28
+  54:	32205341 	eorcc	r5, r0, #67108865	@ 0x4000001
+  58:	0032342e 	eorseq	r3, r2, lr, lsr #8
