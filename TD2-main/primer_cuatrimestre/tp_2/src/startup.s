@@ -33,7 +33,7 @@ Un bucle infinito para “esperar” o “dormir”.
 
 .code 32
 
-.section .init:
+.section .start:
 
 _table_isr:
 	LDR PC, literal_reset_vector
@@ -57,18 +57,15 @@ _table_isr:
 
 
 _start:
-    b copy_loop
-
-copy_loop:
     LDR r0, = #0                    // Dirección destino (inicio de vectores)
     LDR r1, = _table_isr            // Origen
-    LDR r2, = _start                // Fin de la tabla
+    LDR r2, = _start   
 
-copy_loop_body:
+_copy_loop:
     LDR r3, [r1], #4
     STR r3, [r0], #4
 	CMP r1, r2
-    BNE copy_loop_body
+    BNE _copy_loop            // Fin de la tabla
 
     //Constantes para los modos de operacion
     .equ USR_MODE,  0x10 /*User         - CPSR[4:0] = 10000*/
@@ -81,10 +78,10 @@ copy_loop_body:
 
     .equ MASK,      0xC0 /*Mascara para poner en 1 el bit de la interrupcion a deshabilitar */
 
-stack_init:
+_stack_init:
     // Modo FIQ
-    MSR cpsr_c, #(0x11 | 0xC0)  // Modo FIQ, deshabilitar IRQ/FIQ
-    LDR SP, = __stack_top_fiq__
+    //MSR cpsr_c, #(0x11 | 0xC0)  // Modo FIQ, deshabilitar IRQ/FIQ
+    //LDR SP, = __stack_top_fiq__
 
     // Modo IRQ
     MSR cpsr_c, #(0x12 | 0xC0)  // Modo IRQ, deshabilitar IRQ/FIQ
@@ -110,19 +107,19 @@ stack_init:
 // --------------------------------------------------------
 // Llamar a la inicialización del sistema en C (board_init)
 // --------------------------------------------------------
-board_init:
+_board_init:
     BL board_init               // Llamada a la rutina en C
 
 // --------------------------------------------------------
 // Habilitar interrupciones (IRQ) globalmente
 // --------------------------------------------------------
-irq_enable:
-    MRS r0, cpsr
-    BIC r0, r0, #0x80           // Limpiamos bit I (habilitamos IRQ)
-    MSR cpsr_c, r0
+_irq_enable:
+    CPSIE i
 
-idle:
+_idle:
+
+    // Bucle infinito para "esperar" o "dormir"
     WFI
-	B irq_handler
+    B _idle
 
 .end

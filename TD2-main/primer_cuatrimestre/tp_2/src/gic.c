@@ -1,5 +1,5 @@
 
-#include "gic.h"
+#include "../inc/gic.h"
 
 void __gic_init(void );
 

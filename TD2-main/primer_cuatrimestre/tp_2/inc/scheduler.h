@@ -11,7 +11,6 @@ typedef struct {
     uint32_t sp, spsr, r0_r12[13], lr;
 }context_t;
 
-void tarea1(void);
-void tarea2(void);
-void tarea3(void);
-void idle(void);
+uint32_t *__scheduler(void);
+void __scheduler_init(void);
+void preparar_contexto_tarea(TCB *tcb, void (*entry_point)(void));

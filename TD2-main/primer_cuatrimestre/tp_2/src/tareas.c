@@ -1,10 +1,10 @@
 #include "stdint.h"
-#include "../inc/scheduler.h"
+#include "../inc/tareas.h"
 
 __attribute__((section(".data"))) int global_A = 0;
 __attribute__((section(".data"))) int global_B = 0;
 
-__attribute__((section(".tarea_idle_text"))) void idle(void){
+__attribute__((section(".tarea_idle_text"))) void tarea_idle(void){
     while(1){
         asm("WFI");
     }

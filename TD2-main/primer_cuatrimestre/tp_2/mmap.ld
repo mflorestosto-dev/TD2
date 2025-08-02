@@ -12,8 +12,7 @@ ENTRY(_reset_vector)
 _PUBLIC_RAM_INIT = 0x70010000;
 _PUBLIC_STACK_INIT = 0x70020000;
 
-_STACK_SIZE         = 0x100;
-_SYSTEM_HEAP_LEAN   = 0x100; 
+_STACK_SIZE         = 256;
 
 
 /* 
@@ -21,8 +20,8 @@ _SYSTEM_HEAP_LEAN   = 0x100;
 */
 MEMORY
 {
-    public_ram	: org = _PUBLIC_RAM_INIT, len = 0x1000
-    public_stack : org = _PUBLIC_STACK_INIT, len = 0x2000
+    public_ram	: org = _PUBLIC_RAM_INIT, len = 128M
+    public_stack : org = _PUBLIC_STACK_INIT, len = 1M
 }
 
 /* 
@@ -35,6 +34,8 @@ SECTIONS
         *(.reset*)
         *(.start*) 
         *(.handlers*)
+        *(.kernel_text*)    
+        *(.text*)
         } > public_ram
     
     .data : { *(.data*) } > public_ram
@@ -46,7 +47,8 @@ SECTIONS
         __bss_end__ = .;
         } > public_ram
 
-    . = _PUBLIC_STACK_INIT
+    . = _PUBLIC_STACK_INIT;
+
     .stack : {
         __system_stack_start__ = .;
         
@@ -77,7 +79,7 @@ SECTIONS
         __system_stack_end__ = .;
     } > public_stack
 
-    .stack_tasks (NOLOAD):(ALIGN(4)) {
+    .stack_tasks : {
         __system_stack_tasks_start__ = .;
 
         /*Pilas de las tareas en modo IRQ*/    

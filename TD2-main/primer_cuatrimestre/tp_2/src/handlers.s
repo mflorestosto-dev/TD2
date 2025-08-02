@@ -48,8 +48,8 @@ handler_IRQ:
     BL kernel_handler_irq
 
     //Se vuelve todo como estaba antes, se recontruye la pila
-    POP{R7,R8}
-    MSR R8, SPSR
+    POP {R7,R8}
+    MSR SPSR, R8
     MOV SP, R7
     LDMFD sp!, {R0-R12, PC}^
 

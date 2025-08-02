@@ -13,7 +13,7 @@ uint32_t* kernel_handler_irq(context_t* contexto);
 __attribute__((section(".handler")))
 uint32_t* kernel_handler_irq(context_t* contexto)
 {
-    uint32_t* nuevo_SP = (uint32_t*)0xdeadbeef;  // Valor por defecto para depuración
+    uint32_t *nuevo_SP = (uint32_t*)0xdeadbeef;  // Valor por defecto para depuración
     uint32_t id_interrupcion = GIC0->IAR & 0x1FF; // ID de la interrupción activa
 
     // Guardamos el stack pointer real (usado luego en handlers.s para restaurar contexto)
@@ -24,7 +24,7 @@ uint32_t* kernel_handler_irq(context_t* contexto)
         case GIC_SOURCE_TIMER0:
             if (TIMER0->Timer1RIS & 0x1) {
                 TIMER0->Timer1IntClr = 0x7;  // Limpiar interrupción del timer
-                nuevo_SP = scheduler();     // Obtener el nuevo stack pointer si hay cambio de tarea
+                nuevo_SP = __scheduler();     // Obtener el nuevo stack pointer si hay cambio de tarea
             }
             break;
 

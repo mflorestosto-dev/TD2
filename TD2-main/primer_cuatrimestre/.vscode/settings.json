@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gic.h": "c",
+        "timer.h": "c"
+    }
+}
