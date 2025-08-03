@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../tp_0"
+		},
+		{
+			"path": "../tp_1"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"scheduler.h": "c"
+		}
+	}
+}
