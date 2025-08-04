@@ -64,7 +64,7 @@ void preparar_contexto_tarea(TCB *tcb, void (*entry_point)(void)) {
   
     sp--; // Primero se decrementa el puntero
     *sp = (uint32_t)sp; // Luego se asigna el nuevo valor, eliminando la ambigüedad
-    // --- FIN DE LA CORRECCIÓN ---
+
 
     // Guardar el SP final
     tcb->sp_irq = sp;
