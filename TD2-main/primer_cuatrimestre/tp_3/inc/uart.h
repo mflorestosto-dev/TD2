@@ -69,6 +69,6 @@ extern uint8_t uart_getc( _uart_t* );
 extern void uart_puth( _uart_t* , uint8_t );
 extern uint8_t uart_geth( _uart_t* );
 extern void print_f(char *);
-extern void print_f_len(char *, uint16_t );
+extern void print_f_len(const char *, uint16_t );
 
 #endif

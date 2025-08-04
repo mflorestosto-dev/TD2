@@ -1,0 +1,439 @@
+Archive member included to satisfy reference by file (symbol)
+
+/usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+                              obj/tareas.o (__aeabi_uidiv)
+/usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+                              /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o) (__aeabi_idiv0)
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+public_ram       0x70010000         0x08000000
+public_stack     0x70020000         0x00100000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD obj/board_init.o
+LOAD obj/console_utils.o
+LOAD obj/gic.o
+LOAD obj/handlers.o
+LOAD obj/kernel_handler_irq.o
+LOAD obj/kernel_handler_swi.o
+LOAD obj/reset_vector.o
+LOAD obj/scheduler.o
+LOAD obj/startup.o
+LOAD obj/syscalls.o
+LOAD obj/tareas.o
+LOAD obj/timer.o
+LOAD obj/uart.o
+LOAD /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a
+                0x70010000                        _PUBLIC_RAM_INIT = 0x70010000
+                0x70020000                        _PUBLIC_STACK_INIT = 0x70020000
+                0x00000100                        _STACK_SIZE = 0x100
+                0x70010000                        . = _PUBLIC_RAM_INIT
+
+.text           0x70010000     0x11ec
+ *(.reset*)
+ .reset         0x70010000        0x4 obj/reset_vector.o
+                0x70010000                _reset_vector
+ *(.start*)
+ .start:        0x70010004       0xb0 obj/startup.o
+                0x70010044                _start
+ *(.handlers*)
+ .handlers      0x700100b4       0x54 obj/handlers.o
+                0x700100b4                handler_UND
+                0x700100b8                handler_SWI
+                0x700100cc                handler_prefetch_abort
+                0x700100d0                handler_data_abort
+                0x700100d4                handler_reserved
+                0x700100d8                handler_IRQ
+                0x70010104                handler_FIQ
+ *(.kernel_text*)
+ .kernel_text   0x70010108      0x604 obj/console_utils.o
+                0x70010108                Printf
+                0x700106ac                div
+ .kernel_text   0x7001070c       0x7c obj/gic.o
+                0x7001070c                __gic_init
+ .kernel_text   0x70010788      0x26c obj/scheduler.o
+                0x70010788                __scheduler_init
+                0x70010880                __scheduler
+ .kernel_text   0x700109f4       0x7c obj/timer.o
+                0x700109f4                __timer_init
+ .kernel_text   0x70010a70      0x468 obj/uart.o
+                0x70010a70                __uart_init
+                0x70010b7c                xtoi
+                0x70010c10                itox
+                0x70010c8c                uart_putc
+                0x70010cd8                uart_getc
+                0x70010d1c                uart_puth
+                0x70010d88                uart_geth
+                0x70010df8                print_f
+                0x70010e58                print_f_len
+ *(.text*)
+ .text          0x70010ed8       0x30 obj/board_init.o
+                0x70010ed8                board_init
+ .text          0x70010f08        0x0 obj/console_utils.o
+ .text          0x70010f08        0x0 obj/gic.o
+ .text          0x70010f08        0x0 obj/handlers.o
+ .text          0x70010f08        0x0 obj/kernel_handler_irq.o
+ .text          0x70010f08       0xb4 obj/kernel_handler_swi.o
+                0x70010f08                kernel_handler_svc
+ .text          0x70010fbc        0x0 obj/reset_vector.o
+ .text          0x70010fbc       0xc0 obj/scheduler.o
+                0x70010fbc                preparar_contexto_tarea
+ .text          0x7001107c        0x0 obj/startup.o
+ .text          0x7001107c       0x58 obj/syscalls.o
+                0x7001107c                syscall_print_string
+                0x700110a8                syscall_print_uint
+ .text          0x700110d4        0x0 obj/tareas.o
+ .text          0x700110d4        0x0 obj/timer.o
+ .text          0x700110d4        0x0 obj/uart.o
+ .text          0x700110d4      0x114 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+                0x700110d4                __udivsi3
+                0x700110d4                __aeabi_uidiv
+                0x700111c8                __aeabi_uidivmod
+ .text          0x700111e8        0x4 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+                0x700111e8                __aeabi_ldiv0
+                0x700111e8                __aeabi_idiv0
+
+.rodata         0x700111ec       0xcf
+ .rodata        0x700111ec       0x22 obj/console_utils.o
+ *fill*         0x7001120e        0x2 
+ .rodata        0x70011210       0x37 obj/kernel_handler_swi.o
+ *fill*         0x70011247        0x1 
+ .rodata        0x70011248       0x73 obj/tareas.o
+
+.glue_7         0x700112bc        0x0
+ .glue_7        0x700112bc        0x0 linker stubs
+
+.glue_7t        0x700112bc        0x0
+ .glue_7t       0x700112bc        0x0 linker stubs
+
+.vfp11_veneer   0x700112bc        0x0
+ .vfp11_veneer  0x700112bc        0x0 linker stubs
+
+.v4_bx          0x700112bc        0x0
+ .v4_bx         0x700112bc        0x0 linker stubs
+
+.iplt           0x700112bc        0x0
+ .iplt          0x700112bc        0x0 obj/board_init.o
+
+.handler        0x700112bc       0xbc
+ .handler       0x700112bc       0xbc obj/kernel_handler_irq.o
+                0x700112bc                kernel_handler_irq
+
+.tarea_idle_text
+                0x70011378       0x10
+ .tarea_idle_text
+                0x70011378       0x10 obj/tareas.o
+                0x70011378                tarea_idle
+
+.tarea_1_text   0x70011388       0x88
+ .tarea_1_text  0x70011388       0x88 obj/tareas.o
+                0x70011388                tarea_1
+
+.tarea_2_text   0x70011410       0x98
+ .tarea_2_text  0x70011410       0x98 obj/tareas.o
+                0x70011410                tarea_2
+
+.tarea_3_text   0x700114a8       0xbc
+ .tarea_3_text  0x700114a8       0xbc obj/tareas.o
+                0x700114a8                tarea_3
+
+.rel.dyn        0x70011564        0x0
+ .rel.iplt      0x70011564        0x0 obj/board_init.o
+
+.data           0x70011564       0x90
+ *(.data*)
+ .data          0x70011564        0x0 obj/board_init.o
+ .data          0x70011564        0x0 obj/console_utils.o
+ .data          0x70011564        0x0 obj/gic.o
+ .data          0x70011564        0x0 obj/handlers.o
+ .data          0x70011564        0x0 obj/kernel_handler_irq.o
+ .data          0x70011564        0x0 obj/kernel_handler_swi.o
+ .data          0x70011564        0x0 obj/reset_vector.o
+ .data          0x70011564       0x90 obj/scheduler.o
+                0x70011564                ticks
+                0x70011568                tarea_nueva
+                0x7001156c                inicio
+                0x70011570                true_sp
+                0x70011574                tcb_tareas
+                0x700115b4                task_ticks
+                0x700115c4                tareas_fun
+                0x700115d4                task_stack_IRQ
+                0x700115e4                task_stack_SVC
+ .data          0x700115f4        0x0 obj/startup.o
+ .data          0x700115f4        0x0 obj/syscalls.o
+ .data          0x700115f4        0x0 obj/tareas.o
+ .data          0x700115f4        0x0 obj/timer.o
+ .data          0x700115f4        0x0 obj/uart.o
+ .data          0x700115f4        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .data          0x700115f4        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.igot.plt       0x700115f4        0x0
+ .igot.plt      0x700115f4        0x0 obj/board_init.o
+
+.bss            0x700115f4        0x0
+                0x700115f4                        . = ALIGN (0x4)
+                0x700115f4                        __bss_start__ = .
+ *(.bss*)
+ .bss           0x700115f4        0x0 obj/board_init.o
+ .bss           0x700115f4        0x0 obj/console_utils.o
+ .bss           0x700115f4        0x0 obj/gic.o
+ .bss           0x700115f4        0x0 obj/handlers.o
+ .bss           0x700115f4        0x0 obj/kernel_handler_irq.o
+ .bss           0x700115f4        0x0 obj/kernel_handler_swi.o
+ .bss           0x700115f4        0x0 obj/reset_vector.o
+ .bss           0x700115f4        0x0 obj/scheduler.o
+ .bss           0x700115f4        0x0 obj/startup.o
+ .bss           0x700115f4        0x0 obj/syscalls.o
+ .bss           0x700115f4        0x0 obj/tareas.o
+ .bss           0x700115f4        0x0 obj/timer.o
+ .bss           0x700115f4        0x0 obj/uart.o
+ .bss           0x700115f4        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .bss           0x700115f4        0x0 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+                0x700115f4                        __bss_end__ = .
+                0x70020000                        . = _PUBLIC_STACK_INIT
+
+.stack          0x70020000      0x600
+                0x70020000                        __system_stack_start__ = .
+                0x70020100                        . = (. + _STACK_SIZE)
+ *fill*         0x70020000      0x100 
+                0x70020100                        . = ALIGN (0x4)
+                0x70020100                        __stack_top_sys__ = .
+                0x70020200                        . = (. + _STACK_SIZE)
+ *fill*         0x70020100      0x100 
+                0x70020200                        . = ALIGN (0x4)
+                0x70020200                        __stack_top_svc__ = .
+                0x70020300                        . = (. + _STACK_SIZE)
+ *fill*         0x70020200      0x100 
+                0x70020300                        . = ALIGN (0x4)
+                0x70020300                        __stack_top_irq__ = .
+                0x70020400                        . = (. + _STACK_SIZE)
+ *fill*         0x70020300      0x100 
+                0x70020400                        . = ALIGN (0x4)
+                0x70020400                        __stack_top_fiq__ = .
+                0x70020500                        . = (. + _STACK_SIZE)
+ *fill*         0x70020400      0x100 
+                0x70020500                        . = ALIGN (0x4)
+                0x70020500                        __stack_top_abt__ = .
+                0x70020600                        . = (. + _STACK_SIZE)
+ *fill*         0x70020500      0x100 
+                0x70020600                        . = ALIGN (0x4)
+                0x70020600                        __stack_top_und__ = .
+                0x70020600                        __system_stack_end__ = .
+
+.stack_tasks    0x70020600      0x800
+                0x70020600                        __system_stack_tasks_start__ = .
+                0x70020700                        . = (. + _STACK_SIZE)
+ *fill*         0x70020600      0x100 
+                0x70020700                        . = ALIGN (0x4)
+                0x70020700                        __task_idle_stack_top_irq__ = .
+                0x70020800                        . = (. + _STACK_SIZE)
+ *fill*         0x70020700      0x100 
+                0x70020800                        . = ALIGN (0x4)
+                0x70020800                        __task_tarea1_stack_top_irq__ = .
+                0x70020900                        . = (. + _STACK_SIZE)
+ *fill*         0x70020800      0x100 
+                0x70020900                        . = ALIGN (0x4)
+                0x70020900                        __task_tarea2_stack_top_irq__ = .
+                0x70020a00                        . = (. + _STACK_SIZE)
+ *fill*         0x70020900      0x100 
+                0x70020a00                        . = ALIGN (0x4)
+                0x70020a00                        __task_tarea3_stack_top_irq__ = .
+                0x70020b00                        . = (. + _STACK_SIZE)
+ *fill*         0x70020a00      0x100 
+                0x70020b00                        . = ALIGN (0x4)
+                0x70020b00                        __task_idle_stack_top_svc__ = .
+                0x70020c00                        . = (. + _STACK_SIZE)
+ *fill*         0x70020b00      0x100 
+                0x70020c00                        . = ALIGN (0x4)
+                0x70020c00                        __task_tarea1_stack_top_svc__ = .
+                0x70020d00                        . = (. + _STACK_SIZE)
+ *fill*         0x70020c00      0x100 
+                0x70020d00                        . = ALIGN (0x4)
+                0x70020d00                        __task_tarea2_stack_top_svc__ = .
+                0x70020e00                        . = (. + _STACK_SIZE)
+ *fill*         0x70020d00      0x100 
+                0x70020e00                        . = ALIGN (0x4)
+                0x70020e00                        __task_tarea3_stack_top_svc__ = .
+                0x70020e00                        __system_stack_tasks_end__ = .
+OUTPUT(obj/bios.elf elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000     0x188f
+ .debug_info    0x00000000      0x233 obj/board_init.o
+ .debug_info    0x00000233      0x3a9 obj/console_utils.o
+ .debug_info    0x000005dc      0x2f1 obj/gic.o
+ .debug_info    0x000008cd       0x26 obj/handlers.o
+ .debug_info    0x000008f3      0x329 obj/kernel_handler_irq.o
+ .debug_info    0x00000c1c      0x125 obj/kernel_handler_swi.o
+ .debug_info    0x00000d41      0x2ae obj/scheduler.o
+ .debug_info    0x00000fef       0xcf obj/syscalls.o
+ .debug_info    0x000010be      0x176 obj/tareas.o
+ .debug_info    0x00001234      0x214 obj/timer.o
+ .debug_info    0x00001448      0x3cd obj/uart.o
+ .debug_info    0x00001815       0x3e /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .debug_info    0x00001853       0x3c /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.debug_abbrev   0x00000000      0xb79
+ .debug_abbrev  0x00000000      0x12d obj/board_init.o
+ .debug_abbrev  0x0000012d      0x1d5 obj/console_utils.o
+ .debug_abbrev  0x00000302       0xef obj/gic.o
+ .debug_abbrev  0x000003f1       0x14 obj/handlers.o
+ .debug_abbrev  0x00000405      0x11f obj/kernel_handler_irq.o
+ .debug_abbrev  0x00000524       0xce obj/kernel_handler_swi.o
+ .debug_abbrev  0x000005f2      0x17e obj/scheduler.o
+ .debug_abbrev  0x00000770       0x78 obj/syscalls.o
+ .debug_abbrev  0x000007e8       0xca obj/tareas.o
+ .debug_abbrev  0x000008b2       0xca obj/timer.o
+ .debug_abbrev  0x0000097c      0x1af obj/uart.o
+ .debug_abbrev  0x00000b2b       0x28 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .debug_abbrev  0x00000b53       0x26 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.debug_aranges  0x00000000      0x210
+ .debug_aranges
+                0x00000000       0x20 obj/board_init.o
+ .debug_aranges
+                0x00000020       0x28 obj/console_utils.o
+ .debug_aranges
+                0x00000048       0x20 obj/gic.o
+ .debug_aranges
+                0x00000068       0x20 obj/handlers.o
+ .debug_aranges
+                0x00000088       0x20 obj/kernel_handler_irq.o
+ .debug_aranges
+                0x000000a8       0x20 obj/kernel_handler_swi.o
+ .debug_aranges
+                0x000000c8       0x30 obj/scheduler.o
+ .debug_aranges
+                0x000000f8       0x20 obj/syscalls.o
+ .debug_aranges
+                0x00000118       0x38 obj/tareas.o
+ .debug_aranges
+                0x00000150       0x20 obj/timer.o
+ .debug_aranges
+                0x00000170       0x60 obj/uart.o
+ .debug_aranges
+                0x000001d0       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .debug_aranges
+                0x000001f0       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.debug_rnglists
+                0x00000000       0xf7
+ .debug_rnglists
+                0x00000000       0x13 obj/board_init.o
+ .debug_rnglists
+                0x00000013       0x1a obj/console_utils.o
+ .debug_rnglists
+                0x0000002d       0x13 obj/gic.o
+ .debug_rnglists
+                0x00000040       0x14 obj/kernel_handler_irq.o
+ .debug_rnglists
+                0x00000054       0x22 obj/scheduler.o
+ .debug_rnglists
+                0x00000076       0x28 obj/tareas.o
+ .debug_rnglists
+                0x0000009e       0x13 obj/timer.o
+ .debug_rnglists
+                0x000000b1       0x46 obj/uart.o
+
+.debug_line     0x00000000      0xcdd
+ .debug_line    0x00000000       0xca obj/board_init.o
+ .debug_line    0x000000ca      0x295 obj/console_utils.o
+ .debug_line    0x0000035f       0xaa obj/gic.o
+ .debug_line    0x00000409       0x56 obj/handlers.o
+ .debug_line    0x0000045f       0xf4 obj/kernel_handler_irq.o
+ .debug_line    0x00000553       0xcc obj/kernel_handler_swi.o
+ .debug_line    0x0000061f      0x16c obj/scheduler.o
+ .debug_line    0x0000078b       0x87 obj/syscalls.o
+ .debug_line    0x00000812      0x164 obj/tareas.o
+ .debug_line    0x00000976       0xb2 obj/timer.o
+ .debug_line    0x00000a28      0x204 obj/uart.o
+ .debug_line    0x00000c2c       0x67 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .debug_line    0x00000c93       0x4a /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.debug_str      0x00000000      0x845
+ .debug_str     0x00000000      0x845 obj/board_init.o
+                                0x1fe (size before relaxing)
+ .debug_str     0x00000845      0x25a obj/console_utils.o
+ .debug_str     0x00000845      0x24e obj/gic.o
+ .debug_str     0x00000845       0x6c obj/handlers.o
+ .debug_str     0x00000845      0x2cf obj/kernel_handler_irq.o
+ .debug_str     0x00000845      0x1ad obj/kernel_handler_swi.o
+ .debug_str     0x00000845      0x328 obj/scheduler.o
+ .debug_str     0x00000845      0x187 obj/syscalls.o
+ .debug_str     0x00000845      0x1be obj/tareas.o
+ .debug_str     0x00000845      0x261 obj/timer.o
+ .debug_str     0x00000845      0x243 obj/uart.o
+ .debug_str     0x00000845       0xa5 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .debug_str     0x00000845       0xa6 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.comment        0x00000000       0x26
+ .comment       0x00000000       0x26 obj/board_init.o
+                                 0x27 (size before relaxing)
+ .comment       0x00000026       0x27 obj/console_utils.o
+ .comment       0x00000026       0x27 obj/gic.o
+ .comment       0x00000026       0x27 obj/kernel_handler_irq.o
+ .comment       0x00000026       0x27 obj/kernel_handler_swi.o
+ .comment       0x00000026       0x27 obj/scheduler.o
+ .comment       0x00000026       0x27 obj/syscalls.o
+ .comment       0x00000026       0x27 obj/tareas.o
+ .comment       0x00000026       0x27 obj/timer.o
+ .comment       0x00000026       0x27 obj/uart.o
+
+.ARM.attributes
+                0x00000000       0x35
+ .ARM.attributes
+                0x00000000       0x37 obj/board_init.o
+ .ARM.attributes
+                0x00000037       0x37 obj/console_utils.o
+ .ARM.attributes
+                0x0000006e       0x37 obj/gic.o
+ .ARM.attributes
+                0x000000a5       0x16 obj/handlers.o
+ .ARM.attributes
+                0x000000bb       0x37 obj/kernel_handler_irq.o
+ .ARM.attributes
+                0x000000f2       0x37 obj/kernel_handler_swi.o
+ .ARM.attributes
+                0x00000129       0x16 obj/reset_vector.o
+ .ARM.attributes
+                0x0000013f       0x37 obj/scheduler.o
+ .ARM.attributes
+                0x00000176       0x18 obj/startup.o
+ .ARM.attributes
+                0x0000018e       0x37 obj/syscalls.o
+ .ARM.attributes
+                0x000001c5       0x37 obj/tareas.o
+ .ARM.attributes
+                0x000001fc       0x37 obj/timer.o
+ .ARM.attributes
+                0x00000233       0x37 obj/uart.o
+ .ARM.attributes
+                0x0000026a       0x1c /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .ARM.attributes
+                0x00000286       0x1c /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)
+
+.debug_frame    0x00000000      0x3e4
+ .debug_frame   0x00000000       0x30 obj/board_init.o
+ .debug_frame   0x00000030       0x68 obj/console_utils.o
+ .debug_frame   0x00000098       0x30 obj/gic.o
+ .debug_frame   0x000000c8       0x30 obj/kernel_handler_irq.o
+ .debug_frame   0x000000f8       0x30 obj/kernel_handler_swi.o
+ .debug_frame   0x00000128       0x70 obj/scheduler.o
+ .debug_frame   0x00000198       0x50 obj/syscalls.o
+ .debug_frame   0x000001e8       0x7c obj/tareas.o
+ .debug_frame   0x00000264       0x30 obj/timer.o
+ .debug_frame   0x00000294      0x130 obj/uart.o
+ .debug_frame   0x000003c4       0x20 /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+
+.debug_line_str
+                0x00000000       0x7e
+ .debug_line_str
+                0x00000000       0x7e /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_udivsi3.o)
+ .debug_line_str
+                0x0000007e       0x7e /usr/lib/gcc/arm-none-eabi/13.2.1/libgcc.a(_dvmd_tls.o)

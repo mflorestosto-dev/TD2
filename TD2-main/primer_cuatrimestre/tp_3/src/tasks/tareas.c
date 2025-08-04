@@ -1,5 +1,6 @@
 #include "stdint.h"
 #include "../../inc/tareas.h"
+#include "../../inc/syscalls.h" // Para usar las syscalls
 
 
 __attribute__((section(".tarea_idle_text"))) void tarea_idle(void){
@@ -16,25 +17,21 @@ __attribute__((section(".tarea_idle_text"))) void tarea_idle(void){
  * En un sistema real, cada número calculado se imprimiría a través de una llamada a sistema (syscall).
  */
 __attribute__((section(".tarea_1_text"))) void tarea_1(void){
-    // Definimos hasta qué número de la secuencia queremos calcular.
-    const int MAX_FIBO_COUNT = 20; 
     uint32_t a = 0, b = 1;
+    
+    syscall_print_string("Tarea 1: Fibonacci\n");
 
-    // Primeros dos números de la secuencia
-    // Aquí se haría la llamada a sistema (syscall) para imprimir 'a' (0)
-    // Aquí se haría la llamada a sistema (syscall) para imprimir 'b' (1)
-
-    for (int i = 2; i < MAX_FIBO_COUNT; i++) {
+    for (int i = 0; i < 10; i++) {
+        syscall_print_uint(a);
+        syscall_print_string(" ");
+        
         uint32_t next = a + b;
-        // Aquí se haría la llamada a sistema (syscall) para imprimir el valor de 'next'
         a = b;
         b = next;
     }
-
-    // La tarea ya completó su cálculo principal.
-    // Entra en un bucle infinito para no finalizar y ceder el control.
+    
+    // La tarea termina su trabajo y se duerme
     while(1){
-        // Podríamos llamar a WFI para dormir la tarea si no hay más que hacer.
         asm("WFI");
     }
 }
@@ -42,17 +39,19 @@ __attribute__((section(".tarea_1_text"))) void tarea_1(void){
 /**
  * @brief Tarea 2: Conjetura de Collatz.
  *
- * Aplica la secuencia de Collatz a un número inicial hasta llegar a 1.
+ * Imprime la secuencia de Collatz para un número inicial usando syscalls.
  * Si n es par -> n = n / 2
  * Si n es impar -> n = 3 * n + 1
- * Cada paso de la secuencia se imprimiría por una syscall.
  */
 __attribute__((section(".tarea_2_text"))) void tarea_2(void){
     // Número inicial para la secuencia (puedes cambiarlo).
     uint32_t n = 27; 
 
-    // Imprimir el número inicial
-    // Aquí se haría la llamada a sistema (syscall) para imprimir el valor inicial de 'n'.
+    // Imprimimos un título para la tarea.
+    syscall_print_string("Tarea 2: Conjetura de Collatz para n=27\n");
+
+    // Imprimimos el número inicial.
+    syscall_print_uint(n);
 
     while (n > 1) {
         if (n % 2 == 0) {
@@ -62,8 +61,13 @@ __attribute__((section(".tarea_2_text"))) void tarea_2(void){
             // Es impar
             n = 3 * n + 1;
         }
-        // Aquí se haría la llamada a sistema (syscall) para imprimir el nuevo valor de 'n'.
+        // Imprimimos una flecha y el nuevo número de la secuencia.
+        syscall_print_string(" -> ");
+        syscall_print_uint(n);
     }
+    
+    // Imprimimos un salto de línea al final.
+    syscall_print_string("\n");
 
     // La secuencia ha llegado a 1. La tarea entra en modo de espera.
     while(1){
@@ -71,30 +75,38 @@ __attribute__((section(".tarea_2_text"))) void tarea_2(void){
     }
 }
 
-/**
+/*
  * @brief Tarea 3: Factorización en números primos.
  *
- * Calcula los factores primos de un número fijo.
- * Cada factor primo encontrado se imprimiría mediante una syscall.
+ * Calcula e imprime los factores primos de un número fijo usando syscalls.
  */
 __attribute__((section(".tarea_3_text"))) void tarea_3(void){
     // Número que queremos factorizar (puedes cambiarlo).
-    uint32_t numero = 9975; // Por ejemplo: 3 * 3 * 5 * 5 * 5 * 7
+    uint32_t numero = 9975;
     uint32_t n = numero;
     uint32_t divisor = 2;
 
-    // Aquí se haría una syscall para imprimir un mensaje inicial, ej: "Factores de 9975:"
+    // Imprimimos un título para la tarea.
+    syscall_print_string("Tarea 3: Factores primos de ");
+    syscall_print_uint(numero);
+    syscall_print_string(":\n");
 
     while (n > 1) {
         if (n % divisor == 0) {
-            // 'divisor' es un factor primo.
-            // Aquí se haría la llamada a sistema (syscall) para imprimir el 'divisor'.
+            // 'divisor' es un factor primo. Lo imprimimos.
+            syscall_print_uint(divisor);
+            syscall_print_string(" ");
+
+            // Dividimos el número por el factor encontrado.
             n = n / divisor;
         } else {
             // Pasamos al siguiente posible divisor.
             divisor++;
         }
     }
+
+    // Imprimimos un salto de línea al final.
+    syscall_print_string("\n");
 
     // La factorización ha terminado. La tarea entra en modo de espera.
     while(1){

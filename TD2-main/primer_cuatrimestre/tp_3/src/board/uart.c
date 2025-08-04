@@ -7,7 +7,7 @@ uint8_t uart_getc( _uart_t* );
 void uart_puth( _uart_t* , uint8_t );
 uint8_t uart_geth( _uart_t* );
 void print_f( char *);
-void print_f_len(char *, uint16_t );
+void print_f_len(const char *, uint16_t );
 
 // Revisar la sección a la cual fueron asignadas las funciones a continuación
 __attribute__((section(".kernel_text"))) _uart_t* __uart_init(uint8_t uart_num) {   
@@ -117,7 +117,7 @@ __attribute__((section(".kernel_text"))) void print_f(char *s ) {
         }
   }
 
-__attribute__((section(".kernel_text"))) void print_f_len(char *s, uint16_t len) {   
+__attribute__((section(".kernel_text"))) void print_f_len(const char *s, uint16_t len) {   
       _uart_t* UART0 = ( _uart_t* ) UART0_ADDR;
       uint16_t i = 0;
       for(i = 0; i < len; i++)

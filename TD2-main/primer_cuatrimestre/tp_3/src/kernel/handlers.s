@@ -23,7 +23,21 @@ handler_UND:
     b .
 
 handler_SWI:         
-    b .
+    // 1. Guardamos el contexto de la tarea que llamó a la syscall
+    //    (registros R0-R12, LR) en la pila.
+    //    Esto es necesario para que podamos restaurar el contexto después de manejar la syscall.
+    //    El LR se ajusta para que no vuelva a la instrucción de llamada a la syscall,
+    //    sino que vuelva al punto correcto después de manejar la syscall.
+    SUB LR, LR, #4
+    PUSH {R0-R12, LR}
+
+    // 2. Llamamos al manejador en C, pasándole un puntero al contexto
+    //    guardado (el stack pointer actual)
+    MOV R0, SP
+    BL kernel_handler_svc
+
+    // 3. Restauramos el contexto y volvemos a la tarea
+    LDMFD sp!, {R0-R12, PC}^
 
 handler_prefetch_abort:      
     b .

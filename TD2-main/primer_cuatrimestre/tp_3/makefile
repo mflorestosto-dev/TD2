@@ -13,7 +13,7 @@ all: $(BIN)bios.bin $(OBJ)bios.elf
 $(BIN)bios.bin: $(OBJ)bios.elf
 	$(CHAIN)-objcopy -O binary $< $@
 
-$(OBJ)bios.elf: $(OBJ)startup.o $(OBJ)handlers.o $(OBJ)reset_vector.o $(OBJ)kernel_handler_irq.o $(OBJ)board_init.o $(OBJ)gic.o $(OBJ)timer.o $(OBJ)scheduler.o $(OBJ)tareas.o $(OBJ)uart.o
+$(OBJ)bios.elf: $(OBJ)startup.o $(OBJ)handlers.o $(OBJ)reset_vector.o $(OBJ)kernel_handler_irq.o $(OBJ)board_init.o $(OBJ)gic.o $(OBJ)timer.o $(OBJ)scheduler.o $(OBJ)tareas.o $(OBJ)uart.o $(OBJ)kernel_handler_swi.o $(OBJ)syscalls.o $(OBJ)console_utils.o
 	@echo "Linkeando..."
 	mkdir -p obj
 	mkdir -p lst
@@ -51,6 +51,20 @@ $(OBJ)tareas.o: $(SRC)tasks/tareas.c
 $(OBJ)uart.o: $(SRC)board/uart.c
 	mkdir -p $(OBJ)
 	$(CHAIN)-gcc $(CFLAGS) -c $< -o $@
+
+$(OBJ)kernel_handler_swi.o: $(SRC)irq/kernel_handler_swi.c
+	mkdir -p $(OBJ)
+	$(CHAIN)-gcc $(CFLAGS) -c $< -o $@
+
+$(OBJ)syscalls.o: $(SRC)irq/syscalls.c
+	mkdir -p $(OBJ)
+	$(CHAIN)-gcc $(CFLAGS) -c $< -o $@
+
+$(OBJ)console_utils.o: $(SRC)utils/console_utils.c
+	mkdir -p $(OBJ)
+	$(CHAIN)-gcc $(CFLAGS) -c $< -o $@
+
+
 
 #
 # Ensamblado de código assembler

@@ -49,20 +49,22 @@ void preparar_contexto_tarea(TCB *tcb, void (*entry_point)(void)) {
     int i;
     uint32_t *sp = tcb->sp_irq;
 
-    // LR = PC destino (entry point)
-    *(--sp) = (uint32_t) entry_point;
-
-    // R12..R0 = 0
-    for (i = 0; i < 13; i++) {
-        sp--;
-        *(--sp) = 0;
-    }
-
     // SPSR (modo SVC, IRQ habilitadas)
     *(--sp) = 0x113;
 
+    // LR = PC destino (entry point)
+    *(--sp) = (uint32_t) entry_point;
+
+    // R12..R1, R0 = 0
+    for (i = 0; i < 13; i++) {
+        *(--sp) = 0;
+    }
+    
     // R0 apunta al final del contexto (se simula como SP_user)
-    *(--sp) = (uint32_t) sp;
+  
+    sp--; // Primero se decrementa el puntero
+    *sp = (uint32_t)sp; // Luego se asigna el nuevo valor, eliminando la ambigüedad
+    // --- FIN DE LA CORRECCIÓN ---
 
     // Guardar el SP final
     tcb->sp_irq = sp;
