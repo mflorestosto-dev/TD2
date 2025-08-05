@@ -80,27 +80,27 @@ _copy_loop:
 
 _stack_init:
     // Modo FIQ
-    //MSR cpsr_c, #(0x11 | 0xC0)  // Modo FIQ, deshabilitar IRQ/FIQ
+    //MSR cpsr_c, #(FIQ_MODE | MASK)   // Modo FIQ, deshabilitar IRQ/FIQ
     //LDR SP, = __stack_top_fiq__
 
     // Modo IRQ
-    MSR cpsr_c, #(0x12 | 0xC0)  // Modo IRQ, deshabilitar IRQ/FIQ
+    MSR cpsr_c, #(IRQ_MODE | MASK)  // Modo IRQ, deshabilitar IRQ/FIQ
     LDR SP, = __stack_top_irq__
 
     // Modo Supervisor
-    MSR cpsr_c, #(0x13 | 0xC0)  // Modo SVC, deshabilitar IRQ/FIQ
+    MSR cpsr_c, #(SVC_MODE | MASK)  // Modo SVC, deshabilitar IRQ/FIQ
     LDR SP, = __stack_top_svc__
 
     // Modo Abort
-    MSR cpsr_c, #(0x17 | 0xC0)  // Modo Abort, deshabilitar IRQ/FIQ
+    MSR cpsr_c, #(ABT_MODE | MASK)   // Modo Abort, deshabilitar IRQ/FIQ
     LDR SP, = __stack_top_abt__
 
     // Modo Undefined
-    MSR cpsr_c, #(0x1B| 0xC0)  // Modo Undefined, deshabilitar IRQ/FIQ
+    MSR cpsr_c, #(UND_MODE | MASK)   // Modo Undefined, deshabilitar IRQ/FIQ
     LDR SP, = __stack_top_und__
 
     // Modo System (generalmente se usa como User con privilegios)
-    MSR cpsr_c, #(0x1F | 0xC0)  // Modo System, deshabilitar IRQ/FIQ
+    MSR cpsr_c, #(SYS_MODE | MASK)   // Modo System, deshabilitar IRQ/FIQ
     LDR SP, = __stack_top_sys__
 
 
