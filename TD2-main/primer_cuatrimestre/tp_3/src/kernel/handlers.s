@@ -16,6 +16,7 @@ se queda en un bucle infinito (esperando que el usuario lo depure).
 
 
 .extern kernel_handler_irq
+.extern kernel_handler_svc
 
 .section .handlers, "ax"
 
