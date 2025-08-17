@@ -12,12 +12,8 @@ ENTRY(_reset_vector)
 _PUBLIC_RAM_INIT = 0x70010000;
 _PUBLIC_STACK_INIT = 0x70020000;
 
-_STACK_SIZE         = 512;
+_STACK_SIZE         = 256;
 
-TASK1_SIZE = 128;
-TASK2_SIZE = 128;
-TASK3_SIZE = 128;
-IDLE_TASK_SIZE = 128;
 
 /* 
     Definición del mapa de memoria
@@ -38,7 +34,7 @@ SECTIONS
         *(.reset*)
         *(.start*) 
         *(.handlers*)
-        *(.kernel_text*)   
+        *(.kernel_text*)    
         *(.text*)
         } > public_ram
     
@@ -50,10 +46,6 @@ SECTIONS
         *(.bss*)
         __bss_end__ = .;
         } > public_ram
-
-    .tcb_data : {
-        *(.tcb_data*)
-    } > public_ram
 
     . = _PUBLIC_STACK_INIT;
 
@@ -87,56 +79,55 @@ SECTIONS
         /*PILAS DE CADA TAREA*/
 
         /*Pilas de las tareas en modo IRQ*/    
-        . += IDLE_TASK_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_idle_stack_top_irq__ = .;
 
-        . += TASK1_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea1_stack_top_irq__ = .;
 
-        . += TASK2_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea2_stack_top_irq__ = .;
 
-        . += TASK3_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea3_stack_top_irq__ = .;
 
         /*Pilas de las tareas en modo SVC*/    
-        . += IDLE_TASK_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_idle_stack_top_svc__ = .;
 
-        . += TASK1_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea1_stack_top_svc__ = .;
 
-        . += TASK2_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea2_stack_top_svc__ = .;
 
-        . += TASK3_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea3_stack_top_svc__ = .;
 
         /*Pilas de las tareas en modo SYS*/    
-        . += IDLE_TASK_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_idle_stack_top_sys__ = .;
 
-        . += TASK1_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea1_stack_top_sys__ = .;
 
-        . += TASK2_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea2_stack_top_sys__ = .;
 
-        . += TASK3_SIZE;
+        . += _STACK_SIZE;
         . = ALIGN(4);
         __task_tarea3_stack_top_sys__ = .;
-
 
         __system_stack_end__ = .;
     } > public_stack
